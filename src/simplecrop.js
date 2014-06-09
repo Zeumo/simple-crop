@@ -8,7 +8,7 @@
     this.options = $.extend({
       offset: 0.5,
       height: options.width || this.$el.height(),
-      width: options.height
+      width: options.height || this.$el.height()
     }, options);
 
     this.setupUI();
