@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>simplecrop</title>
+  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="src/simplecrop.js"></script>
+  <link rel="stylesheet" href="src/simplecrop.css">
+
+  <style>
+    body {
+      font-family: "helvetica neue";
+    }
+    .simplecrop-container {
+      margin: 0 auto;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .help {
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="root">
+    <img src="http://lorempixel.com/1000/400" alt="" class="croppable">
+
+    <div class="help text-center">
+      <small>
+        &larr; drag &rarr;
+      </small>
+    </div>
+  </div>
+
+
+  <script>
+    $(window).load(function() {
+      $('.croppable').simplecrop({
+        height: 300
+      });
+      $('.croppable').on('cropend', function(e, dimensions) {
+        console.log(dimensions);
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+.simplecrop-container img {
+  position: absolute;
+  max-height: 100%;
+}
+
+.simplecrop-constraint {
+  overflow: hidden;
+  position: relative;
+  cursor: ew-resize;
+  margin: 0 auto;
+}
