@@ -4,6 +4,9 @@
   var SimpleCrop, pluginName = 'simplecrop';
 
   SimpleCrop = function(el, options) {
+    var self     = this;
+
+    this.el      = el;
     this.$el     = $(el);
     this.options = $.extend({
       offset: 0.5,
@@ -11,14 +14,23 @@
       width: options.height || this.$el.height()
     }, options);
 
-    this.setupUI();
-    this.setupDraggable();
+
+    this.$el.load(function() {
+      self.orientation = self.$el.width() < self.$el.height() ? 'portrait' : 'landscape';
+      self.portrait    = self.orientation === 'portrait';
+      self.landscape   = self.orientation === 'landscape';
+
+      self.setupUI();
+      self.setupDraggable();
+    });
   };
 
   SimpleCrop.prototype.setupDraggable = function() {
     var self = this,
         leftEdge = Math.ceil(self.$constraint.position().left),
-        relativeRight = this.$el.width() - self.$constraint.width();
+        topEdge = Math.ceil(self.$constraint.position().top),
+        relativeRight = this.$el.width() - self.$constraint.width(),
+        relativeBottom = this.$el.height() - self.$constraint.height();
 
     var drag = {
       start: function(e) {
@@ -29,10 +41,9 @@
 
         var data = {
           startX: e.clientX,
-          relativeX: e.clientX - leftEdge
+          relativeX: (e.clientX - leftEdge) - self.getPosition().left,
+          relativeY: (e.clientY - topEdge) - self.getPosition().top
         };
-
-        data.relativeX -= self.getLeftOffset();
 
         self.$el.trigger('cropstart');
         $(window).on('mousemove', function(e) {
@@ -42,10 +53,15 @@
       },
 
       move: function(e) {
-        var x = Math.ceil(e.clientX - e.data.relativeX - leftEdge);
+        var left = Math.ceil(e.clientX - e.data.relativeX - leftEdge);
+        var top = Math.ceil(e.clientY - e.data.relativeY - topEdge);
 
-        if (x >= -relativeRight && x <= 0) {
-          self.$el.css('left', x + 'px');
+        if (left >= -relativeRight && left <= 0) {
+          self.$el.css('left', left + 'px');
+        }
+
+        if (top >= -relativeBottom && top <= 0) {
+          self.$el.css('top', top + 'px');
         }
       },
 
@@ -60,41 +76,58 @@
   };
 
   SimpleCrop.prototype.setupUI = function() {
+    this.$el.css({
+      maxHeight: (this.landscape ? this.options.height : 'none'),
+      maxWidth: (this.portrait ? this.options.width : 'none')
+    });
+
+    if (this.$el.height() < this.options.height) {
+      this.$el.height(this.options.height);
+    }
+
     this.$el.wrap('<div class="simplecrop-container"><div class="simplecrop-constraint">');
 
     this.$constraint = this.$el.parent('.simplecrop-constraint');
     this.$container  = this.$el.parents('.simplecrop-container');
 
+    this.$constraint.addClass(this.orientation);
     this.$constraint.width(this.options.width).height(this.options.height);
-    this.$container.width(this.$el.width());
-    this.$el.css('left', this.startingOffset());
+
+    this.$el.css(this.startingPosition());
   };
 
-  SimpleCrop.prototype.startingOffset = function() {
-    var offset, width = this.$el.width();
+  SimpleCrop.prototype.startingPosition = function() {
+    var position = {
+          left: 0,
+          top: 0
+        },
+        width = this.$el.width(),
+        height = this.$el.height();
 
-    if (this.options.offset > 0 && this.options.offset < 1) {
-      // Use ratio
-      offset = (width - this.$constraint.width()) * -this.options.offset;
-
-    } else {
-      // Use pixel offset
-      offset = this.options.offset;
+    if (width > this.options.width) {
+      position.left = (width - this.$constraint.width()) * -this.options.offset;
     }
 
-    return offset;
+    if (height > this.options.height) {
+      position.top = (height - this.$constraint.height()) * -this.options.offset;
+    }
+
+    return position;
   };
 
   SimpleCrop.prototype.getDimensions = function() {
+    var position = this.getPosition();
+
     return {
       height: this.options.height,
       width: this.options.width,
-      left: this.getLeftOffset()
+      left: position.left,
+      top: position.top
     };
   };
 
-  SimpleCrop.prototype.getLeftOffset = function() {
-    return Math.ceil(this.$el.position().left);
+  SimpleCrop.prototype.getPosition = function() {
+    return this.$el.position();
   };
 
   $.fn[pluginName] = function (options) {

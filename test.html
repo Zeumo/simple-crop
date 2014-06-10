@@ -29,18 +29,24 @@
 <body>
 
   <div id="root">
-    <img src="http://lorempixel.com/1000/400" alt="" class="croppable">
+    <div class="fixture">
+      <img src="http://lorempixel.com/1000/400" alt="" class="croppable">
 
-    <div class="help text-center">
-      <small>
-        &larr; drag &rarr;
-      </small>
+      <div class="help text-center">
+        <small>
+          &larr; drag &rarr;
+        </small>
+      </div>
+    </div>
+
+    <div class="fixture">
+      <img src="http://lorempixel.com/400/600" alt="" class="croppable">
     </div>
   </div>
 
 
   <script>
-    $(window).load(function() {
+    $(function() {
       $('.croppable').simplecrop({
         height: 300
       });
