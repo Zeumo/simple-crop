@@ -14,7 +14,6 @@
       width: options.height || this.$el.height()
     }, options);
 
-
     this.$el.load(function() {
       self.orientation = self.$el.width() < self.$el.height() ? 'portrait' : 'landscape';
       self.portrait    = self.orientation === 'portrait';
@@ -28,9 +27,9 @@
   SimpleCrop.prototype.setupDraggable = function() {
     var self = this,
         leftEdge = Math.ceil(self.$constraint.position().left),
-        topEdge = Math.ceil(self.$constraint.position().top),
-        relativeRight = this.$el.width() - self.$constraint.width(),
-        relativeBottom = this.$el.height() - self.$constraint.height();
+        topEdge  = Math.ceil(self.$constraint.position().top),
+        relativeRight  = this.dimensions.width - self.$constraint.width(),
+        relativeBottom = this.dimensions.height - self.$constraint.height();
 
     var drag = {
       start: function(e) {
@@ -81,7 +80,12 @@
       maxWidth: (this.portrait ? this.options.width : 'none')
     });
 
-    if (this.$el.height() < this.options.height) {
+   this.dimensions  = {
+      width: this.$el.width(),
+      height: this.$el.height()
+    };
+
+    if (this.dimensions.height < this.options.height) {
       this.$el.height(this.options.height);
     }
 
@@ -90,8 +94,10 @@
     this.$constraint = this.$el.parent('.simplecrop-constraint');
     this.$container  = this.$el.parents('.simplecrop-container');
 
-    this.$constraint.addClass(this.orientation);
-    this.$constraint.width(this.options.width).height(this.options.height);
+    this.$constraint
+      .width(this.options.width)
+      .height(this.options.height)
+      .addClass(this.orientation);
 
     this.$el.css(this.startingPosition());
   };
@@ -101,15 +107,15 @@
           left: 0,
           top: 0
         },
-        width = this.$el.width(),
-        height = this.$el.height();
+        width  = this.dimensions.width,
+        height = this.dimensions.height;
 
     if (width > this.options.width) {
-      position.left = (width - this.$constraint.width()) * -this.options.offset;
+      position.left = (width - this.options.width) * -this.options.offset;
     }
 
     if (height > this.options.height) {
-      position.top = (height - this.$constraint.height()) * -this.options.offset;
+      position.top = (height - this.options.height) * -this.options.offset;
     }
 
     return position;
