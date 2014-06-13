@@ -2,6 +2,11 @@
 
 A simple, lightweight UI for image cropping
 
+Supports horizontal and vertial cropping
+
+![](http://cl.ly/image/2q0p1E1M0m3b/horizontal-dog.gif)
+![](http://cl.ly/image/462T0g1w0V1q/vertical-angel.gif)
+
 ## Install
 
 Copy the css and js file from src/ to your project and require as needed.
