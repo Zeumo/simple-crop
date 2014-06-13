@@ -2,6 +2,10 @@
 
 A simple, lightweight UI for image cropping
 
+## Install
+
+Copy the css and js file from src/ to your project and require as needed.
+
 ## Usage
 
 ```
