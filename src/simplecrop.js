@@ -4,8 +4,6 @@
   var SimpleCrop, pluginName = 'simplecrop';
 
   SimpleCrop = function(el, options) {
-    var self     = this;
-
     this.el      = el;
     this.$el     = $(el);
     this.options = $.extend({
@@ -14,14 +12,26 @@
       width: options.height || this.$el.height()
     }, options);
 
-    this.$el.load(function() {
-      self.orientation = self.$el.width() < self.$el.height() ? 'portrait' : 'landscape';
-      self.portrait    = self.orientation === 'portrait';
-      self.landscape   = self.orientation === 'landscape';
+    this.$el.load($.proxy(function() {
+      this.originalDimensions  = {
+        width: this.$el.width(),
+        height: this.$el.height()
+      };
 
-      self.setupUI();
-      self.setupDraggable();
-    });
+      this.orientation = this.originalDimensions.width < this.originalDimensions.height ? 'portrait' : 'landscape';
+      this.portrait    = this.orientation === 'portrait';
+      this.landscape   = this.orientation === 'landscape';
+
+      if (this.originalDimensions.width === this.originalDimensions.height) {
+        this.orientation = 'square';
+        this.square      = true;
+        this.portrait    = false;
+        this.landscape   = false;
+      }
+
+      this.setupUI();
+      this.setupDraggable();
+    }, this));
   };
 
   SimpleCrop.prototype.setupDraggable = function() {
@@ -55,6 +65,8 @@
         var left = Math.ceil(e.clientX - e.data.relativeX - leftEdge);
         var top = Math.ceil(e.clientY - e.data.relativeY - topEdge);
 
+        if (self.square) { return; }
+
         if (left >= -relativeRight && left <= 0) {
           self.$el.css('left', left + 'px');
         }
@@ -75,12 +87,9 @@
   };
 
   SimpleCrop.prototype.setupUI = function() {
-    this.$el.css({
-      maxHeight: (this.landscape ? this.options.height : 'none'),
-      maxWidth: (this.portrait ? this.options.width : 'none')
-    });
+    this.setMaxDimensions();
 
-   this.dimensions  = {
+    this.dimensions  = {
       width: this.$el.width(),
       height: this.$el.height()
     };
@@ -110,15 +119,29 @@
         width  = this.dimensions.width,
         height = this.dimensions.height;
 
-    if (width > this.options.width) {
+    if (width > this.options.width && !this.square) {
       position.left = (width - this.options.width) * -this.options.offset;
     }
 
-    if (height > this.options.height) {
+    if (height > this.options.height && !this.square) {
       position.top = (height - this.options.height) * -this.options.offset;
     }
 
     return position;
+  };
+
+  SimpleCrop.prototype.setMaxDimensions = function() {
+    this.$el.css({
+      maxHeight: (this.landscape ? this.options.height : 'none'),
+      maxWidth: (this.portrait ? this.options.width : 'none')
+    });
+
+    if (this.square) {
+      this.$el.css({
+        maxHeight: '100%',
+        maxWidth: '100%'
+      });
+    }
   };
 
   SimpleCrop.prototype.getDimensions = function() {
