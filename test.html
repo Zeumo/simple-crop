@@ -53,8 +53,8 @@
     $(function() {
       $('.croppable').simplecrop({
         height: 300
-      });
-      $('.croppable').on('cropend', function(e, dimensions) {
+      })
+      .on('cropend', function(e, dimensions) {
         console.log(dimensions);
       });
     });

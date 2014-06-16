@@ -32,6 +32,8 @@
       this.setupUI();
       this.setupDraggable();
     }, this));
+
+    return this;
   };
 
   SimpleCrop.prototype.setupDraggable = function() {
