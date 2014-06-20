@@ -52,7 +52,8 @@
   <script>
     $(function() {
       $('.croppable').simplecrop({
-        height: 300
+        height: 300,
+        scale: 2
       })
       .on('cropend', function(e, dimensions) {
         console.log(dimensions);
