@@ -1,3 +1,8 @@
+/*
+ *  simple-crop - v1.0.0
+ *  MIT (c) 2014 Zeumo, Inc
+ */
+
 /* jshint strict: false */
 
 (function(window, $) {
