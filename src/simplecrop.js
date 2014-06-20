@@ -7,6 +7,7 @@
     this.el      = el;
     this.$el     = $(el);
     this.options = $.extend({
+      scale: 1,
       offset: 0.5,
       height: options.width || this.$el.height(),
       width: options.height || this.$el.height()
@@ -150,10 +151,10 @@
     var position = this.getPosition();
 
     return {
-      height: this.options.height,
-      width: this.options.width,
-      left: position.left,
-      top: position.top
+      height: this.options.height * this.options.scale,
+      width: this.options.width * this.options.scale,
+      left: position.left * this.options.scale,
+      top: position.top * this.options.scale
     };
   };
 
