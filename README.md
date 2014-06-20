@@ -24,6 +24,7 @@ See test.html for a complete example.
 * width (default: options height or element height)
 * height (default: options width or element height)
 * offset (default: 0.5)
+* scale (default: 1)
 
 ## Events
 
