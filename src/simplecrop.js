@@ -18,6 +18,7 @@
       width: options.height || this.$el.height()
     }, options);
 
+    this.setupUI();
     this.$el.load($.proxy(function() {
       this.originalDimensions  = {
         width: this.$el.width(),
@@ -95,6 +96,7 @@
   };
 
   SimpleCrop.prototype.setupUI = function() {
+    this.$el.height('auto');
     this.setMaxDimensions();
 
     this.dimensions  = {
@@ -106,7 +108,9 @@
       this.$el.height(this.options.height);
     }
 
-    this.$el.wrap('<div class="simplecrop-container"><div class="simplecrop-constraint">');
+    if (!this.$el.parents('.simplecrop-container').length) {
+      this.$el.wrap('<div class="simplecrop-container"><div class="simplecrop-constraint">');
+    }
 
     this.$constraint = this.$el.parent('.simplecrop-constraint');
     this.$container  = this.$el.parents('.simplecrop-container');
