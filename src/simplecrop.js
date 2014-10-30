@@ -18,6 +18,7 @@
       width: options.height || this.$el.height()
     }, options);
 
+    this.setupUI();
     this.$el.load($.proxy(function() {
       this.originalDimensions  = {
         width: this.$el.width(),
