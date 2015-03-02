@@ -46,18 +46,29 @@
     <div class="fixture">
       <img src="http://lorempixel.com/400/400" alt="" class="croppable">
     </div>
+
+    <div class="fixture" id="fixture-4">
+      <img src="http://lorempixel.com/400/400" alt="" class="croppable">
+    </div>
   </div>
 
 
   <script>
     $(function() {
-      $('.croppable').simplecrop({
+      var options = {
         height: 300,
         scale: 2
-      })
+      };
+
+      $('.croppable').simplecrop(options)
       .on('cropend', function(e, dimensions) {
         console.log(dimensions);
       });
+
+      setTimeout(function() {
+        var $img = $('#fixture-4 img');
+        $img.attr('src', 'http://lorempixel.com/400/600');
+      }, 2000);
     });
   </script>
 
