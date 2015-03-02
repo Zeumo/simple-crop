@@ -64,10 +64,12 @@
         };
 
         self.$el.trigger('cropstart');
-        $(window).on('mousemove', function(e) {
-          e.data = data;
-          drag.move(e);
-        });
+        $(window)
+          .off('mousemove.simplecrop')
+          .on('mousemove.simplecrop', function(e) {
+            e.data = data;
+            drag.move(e);
+          });
       },
 
       move: function(e) {
