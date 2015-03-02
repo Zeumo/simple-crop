@@ -103,13 +103,13 @@
       },
 
       stop: function() {
-        $(window).off('mousemove');
+        $(window).off('mousemove.simplecrop');
         self.$el.trigger('cropend', [self.getDimensions()]);
       }
     };
 
     this.$constraint.on('mousedown', drag.start);
-    $(window).on('mouseup', drag.stop);
+    $(window).on('mouseup.simplecrop', drag.stop);
   };
 
   SimpleCrop.prototype.setupUI = function() {
