@@ -3,9 +3,9 @@
  *  MIT (c) 2014 Zeumo, Inc
  */
 
-/* jshint strict: false */
-
 (function(window, $) {
+  'use strict';
+
   var SimpleCrop, pluginName = 'simplecrop';
 
   SimpleCrop = function(el, options) {
