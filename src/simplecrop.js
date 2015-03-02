@@ -1,5 +1,5 @@
 /*
- *  simple-crop - v1.0.0
+ *  simple-crop - v1.1.0
  *  MIT (c) 2014 Zeumo, Inc
  */
 
