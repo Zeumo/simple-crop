@@ -209,7 +209,7 @@
 
     getPosition: function() {
       return this.$el.position();
-    },
+    }
   });
 
   $.fn[pluginName] = function (options) {
