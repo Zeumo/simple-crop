@@ -9,8 +9,8 @@
   var SimpleCrop, pluginName = 'simplecrop';
 
   SimpleCrop = function(el, options) {
-    this.el      = el;
-    this.$el     = $(el);
+    this.el  = el;
+    this.$el = $(el);
 
     if (!options) { options = {}; }
 
