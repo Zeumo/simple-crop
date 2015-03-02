@@ -11,6 +11,9 @@
   SimpleCrop = function(el, options) {
     this.el      = el;
     this.$el     = $(el);
+
+    if (!options) { options = {}; }
+
     this.options = $.extend({
       scale: 1,
       offset: 0.5,
