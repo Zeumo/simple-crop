@@ -21,12 +21,13 @@
       width: options.height || this.$el.height()
     }, options);
 
+    this.createContainers();
     this.onLoad();
   };
 
   SimpleCrop.prototype.onLoad = function() {
     this.$el.load($.proxy(function() {
-      this.originalDimensions  = {
+      this.naturalDimensions = {
         width: this.$el.width(),
         height: this.$el.height()
       };
@@ -46,8 +47,8 @@
   };
 
   SimpleCrop.prototype.getOrientation = function() {
-    var width  = this.originalDimensions.width,
-        height = this.originalDimensions.height;
+    var width  = this.naturalDimensions.width,
+        height = this.naturalDimensions.height;
 
     if (width > height) {
       return 'landscape';
@@ -108,7 +109,7 @@
       }
     };
 
-    this.$constraint.on('mousedown', drag.start);
+    this.$constraint.on('mousedown.simplecrop', drag.start);
     $(window).on('mouseup.simplecrop', drag.stop);
   };
 
@@ -116,19 +117,10 @@
     this.resetContainers();
     this.setMaxDimensions();
 
-    this.dimensions  = {
+    this.dimensions = {
       width: this.$el.width(),
       height: this.$el.height()
     };
-
-    if (this.dimensions.height < this.options.height) {
-      this.$el.height(this.options.height);
-    }
-
-    if (!this.$container.length) {
-      this.$el.wrap('<div class="simplecrop-container"><div class="simplecrop-constraint">');
-      this.getContainers();
-    }
 
     this.$constraint
       .width(this.options.width)
@@ -136,6 +128,11 @@
       .addClass(this.orientation);
 
     this.$el.css(this.startingPosition());
+  };
+
+  SimpleCrop.prototype.createContainers = function() {
+    this.$el.wrap('<div class="simplecrop-container"><div class="simplecrop-constraint">');
+    this.getContainers();
   };
 
   SimpleCrop.prototype.getContainers = function() {
@@ -150,6 +147,8 @@
       this.$constraint
         .removeClass('portrait landscape square')
         .attr('style', '');
+    } else {
+      this.createContainers();
     }
   };
 
@@ -161,12 +160,14 @@
         width  = this.dimensions.width,
         height = this.dimensions.height;
 
-    if (width > this.options.width && !this.square) {
-      position.left = (width - this.options.width) * -this.options.offset;
-    }
+    if (!this.square) {
+      if (width > this.options.width) {
+        position.left = (width - this.options.width) * -this.options.offset;
+      }
 
-    if (height > this.options.height && !this.square) {
-      position.top = (height - this.options.height) * -this.options.offset;
+      if (height > this.options.height) {
+        position.top = (height - this.options.height) * -this.options.offset;
+      }
     }
 
     return position;
@@ -190,11 +191,19 @@
     var position = this.getPosition();
 
     return {
-      height: this.options.height * this.options.scale,
-      width: this.options.width * this.options.scale,
+      height: this.getScaleHeight(),
+      width: this.getScaleWidth(),
       left: position.left * this.options.scale,
       top: position.top * this.options.scale
     };
+  };
+
+  SimpleCrop.prototype.getScaleHeight = function() {
+    return this.options.height * this.options.scale;
+  };
+
+  SimpleCrop.prototype.getScaleWidth = function() {
+    return this.options.width * this.options.scale;
   };
 
   SimpleCrop.prototype.getPosition = function() {
